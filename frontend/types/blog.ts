@@ -1,6 +1,7 @@
 // types/blog.ts
 export interface BlogPost {
   id: number;
+  documentId?: string;
   title: string;
   slug: string;
   excerpt: string;
@@ -9,8 +10,8 @@ export interface BlogPost {
   publishedAt: string;
   cover: {
     url: string;
-    alternativeText: string;
-    width: number;
-    height: number;
+    alternativeText?: string;
+    width?: number;
+    height?: number;
   } | null;
 }

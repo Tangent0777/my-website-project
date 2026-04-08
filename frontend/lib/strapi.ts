@@ -9,6 +9,8 @@ const STRAPI_TOKEN = process.env.STRAPI_API_TOKEN;
 export interface StrapiCover {
   url: string;
   alternativeText?: string;
+  width?: number;
+  height?: number;
 }
 
 export interface BlogPost {
