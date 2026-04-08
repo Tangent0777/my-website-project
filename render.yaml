@@ -1,0 +1,50 @@
+services:
+  backend:
+    type: web
+    root: ./backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_HOST
+        value: ep-falling-smoke-a45qbdbp.us-east-1.aws.neon.tech
+      - key: DATABASE_PORT
+        value: 5432
+      - key: DATABASE_NAME
+        value: neondb
+      - key: DATABASE_USERNAME
+        value: neondb_owner
+      - key: DATABASE_PASSWORD
+        sync: false
+      - key: APP_KEYS
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: ADMIN_JWT_SECRET
+        sync: false
+      - key: CLOUDINARY_NAME
+        value: Untitled
+      - key: CLOUDINARY_KEY
+        sync: false
+      - key: CLOUDINARY_SECRET
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: "*"
+  
+  frontend:
+    type: web
+    root: ./frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NEXT_PUBLIC_STRAPI_URL
+        value: ${BACKEND_URL}
+
+databases:
+  - name: postgres
+    databaseName: neondb
+    user: neondb_owner
+    
+redis:
+  ipAddress: 10.0.1.0
