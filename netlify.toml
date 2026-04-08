@@ -6,3 +6,6 @@ publish = ".next"
 [build.environment]
 NEXT_PUBLIC_STRAPI_URL = "https://my-website-project-ynpr.onrender.com"
 NODE_VERSION = "20"
+
+[[plugins]]
+package = "@netlify/plugin-nextjs"
