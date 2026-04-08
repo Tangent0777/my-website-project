@@ -49,23 +49,23 @@ async function fetchStrapi(endpoint: string) {
 
 // ── Normaliser ────────────────────────────────────────────────────────────────
 // Handles both Strapi v4 (.attributes wrapper) and v5 (flat structure)
-// Image is an array in this Strapi setup — always take first item
 
 function normalise(raw: any): BlogPost {
   const fields = raw.attributes ?? raw;
 
-  // Image comes back as an array — take first item
-  const imageData = Array.isArray(fields.Image)
-    ? fields.Image[0]
-    : fields.Image;
-
-  const cover = imageData?.data?.attributes ?? imageData ?? null;
+  // Handle cover image - could be nested in data.attributes or direct
+  let coverData = fields.cover;
+  if (coverData?.data?.attributes) {
+    coverData = coverData.data.attributes;
+  } else if (coverData?.data) {
+    coverData = coverData.data;
+  }
 
   // Build full absolute URL so components don't have to
-  const coverUrl = cover?.url
-    ? cover.url.startsWith('http')
-      ? cover.url
-      : `${STRAPI_URL}${cover.url}`
+  const coverUrl = coverData?.url
+    ? coverData.url.startsWith('http')
+      ? coverData.url
+      : `${STRAPI_URL}${coverData.url}`
     : null;
 
   return {
@@ -80,7 +80,7 @@ function normalise(raw: any): BlogPost {
     cover: coverUrl
       ? {
           url:             coverUrl,
-          alternativeText: cover.alternativeText ?? '',
+          alternativeText: coverData?.alternativeText ?? '',
         }
       : null,
   };
@@ -89,13 +89,13 @@ function normalise(raw: any): BlogPost {
 // ── Public API ────────────────────────────────────────────────────────────────
 
 export async function getAllBlogs(): Promise<BlogPost[]> {
-  const data = await fetchStrapi('/blogs?populate=Image&sort=publishedAt:desc');
+  const data = await fetchStrapi('/blogs?populate=cover&sort=publishedAt:desc');
   return (data.data as any[]).map(normalise);
 }
 
 export async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
   const data = await fetchStrapi(
-    `/blogs?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=Image`
+    `/blogs?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=cover`
   );
   if (!data.data?.length) return null;
   return normalise(data.data[0]);
