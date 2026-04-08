@@ -11,9 +11,3 @@ NODE_VERSION = "20"
 # Functions
 [functions]
 directory = ".next/server"
-
-# Redirects for Next.js
-[[redirects]]
-from = "/*"
-to = "/index.html"
-status = 404
