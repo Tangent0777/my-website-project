@@ -6,14 +6,19 @@ import { getAllBlogs } from '@/lib/strapi';
 import Link from 'next/link';
 import { BlogPost } from '@/types/blog';
 
+export const revalidate = 60; // Revalidate every 60 seconds
+
 export default async function HomePage() {
   let latestBlogs: BlogPost[] = [];
+  let fetchError = false;
 
   try {
     const blogs = await getAllBlogs();
-    latestBlogs = blogs.slice(0, 3);
+    latestBlogs = blogs ? blogs.slice(0, 3) : [];
   } catch (error) {
     console.error('Could not fetch blogs:', error);
+    fetchError = true;
+    // Don't throw - just continue rendering without blog posts
   }
 
   return (
@@ -21,7 +26,7 @@ export default async function HomePage() {
       <Hero />
       <Features />
 
-      {latestBlogs.length > 0 && (
+      {latestBlogs && latestBlogs.length > 0 && (
         <section style={{ padding: '100px 24px', backgroundColor: '#f9f9f9' }}>
           <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
             <div style={{
