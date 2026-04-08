@@ -1,5 +1,4 @@
 // lib/strapi.ts
-import type { RootNode } from '@strapi/blocks-react-renderer';
 
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
 const STRAPI_TOKEN = process.env.STRAPI_API_TOKEN;
@@ -19,7 +18,7 @@ export interface BlogPost {
   title: string;
   slug: string;
   excerpt: string;
-  content: RootNode[];
+  content: any[];
   category: string;
   publishedAt: string;
   cover: StrapiCover | null;
@@ -72,11 +71,11 @@ function normalise(raw: any): BlogPost {
   return {
     id:          raw.id,
     documentId:  raw.documentId ?? '',
-    title:       fields.Title       ?? fields.title       ?? 'Untitled',
+    title:       fields.title       ?? 'Untitled',
     slug:        fields.slug        ?? '',
-    excerpt:     fields.Excerpt     ?? fields.excerpt     ?? '',
-    content:     (fields.Content    ?? fields.content     ?? []) as RootNode[],
-    category:    fields.Category    ?? fields.category    ?? 'General',
+    excerpt:     fields.excerpt     ?? '',
+    content:     (fields.content    ?? []) as any[],
+    category:    fields.category    ?? 'General',
     publishedAt: fields.publishedAt ?? new Date().toISOString(),
     cover: coverUrl
       ? {
