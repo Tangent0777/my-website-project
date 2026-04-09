@@ -2,8 +2,8 @@
 export default ({ env }: { env: any }) => {
   const isProduction = env('NODE_ENV') === 'production';
 
-  if (isProduction) {
-    // Cloudinary only in production
+  if (isProduction && env('CLOUDINARY_NAME')) {
+    // Cloudinary only in production if credentials exist
     return {
       upload: {
         config: {
@@ -23,6 +23,6 @@ export default ({ env }: { env: any }) => {
     };
   }
 
-  // Local dev — use default local storage
+  // Use local storage as fallback (develops or when Cloudinary not configured)
   return {};
 };
